@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Android Architecture</string>
+    <string name="base_url">https://hf-android-app.s3-eu-west-1.amazonaws.com/</string>
+</resources>
