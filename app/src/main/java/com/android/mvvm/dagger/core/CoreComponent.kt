@@ -3,6 +3,8 @@ package com.android.mvvm.dagger.core
 import android.content.Context
 import com.android.mvvm.R
 import com.android.mvvm.common.ResourceProvider
+import com.android.mvvm.repository.RecipeRepo
+import com.android.mvvm.repository.RecipeRepoRestImpl
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -29,6 +31,7 @@ interface CoreComponent {
 
     val resourceProvider: ResourceProvider
     val retrofit: Retrofit
+    val recipeRepo: RecipeRepo
 }
 
 @Module
@@ -55,5 +58,11 @@ class CoreModule {
         val okHttpClient = OkHttpClient.Builder().build()
         return retrofitBuilder.baseUrl(context.getString(R.string.base_url))
             .client(okHttpClient).build()
+    }
+
+    @Provides
+    @CoreScope
+    fun provideRecipeRepo(retrofit: Retrofit): RecipeRepo {
+        return RecipeRepoRestImpl(retrofit)
     }
 }

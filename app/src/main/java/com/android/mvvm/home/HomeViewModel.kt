@@ -6,14 +6,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.android.mvvm.common.BaseViewModel
 import com.android.mvvm.dagger.state.AssistedSavedStateViewModelFactory
-import com.android.mvvm.repository.RecipeRepoRestImpl
+import com.android.mvvm.repository.RecipeRepo
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import java.text.SimpleDateFormat
 import java.util.*
 
 class HomeViewModel @AssistedInject constructor(
-    private val recipeRestRepo: RecipeRepoRestImpl,
+    private val recipeRestRepo: RecipeRepo,
     @Assisted private val savedStateHandle: SavedStateHandle,
     @Assisted private val bundle: Bundle?
 ) : BaseViewModel() {

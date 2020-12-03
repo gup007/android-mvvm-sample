@@ -13,8 +13,7 @@ import okhttp3.Response
 import retrofit2.Retrofit
 import javax.inject.Inject
 
-@ModuleScope
-class RecipeRepoRestImpl @Inject constructor(
+class RecipeRepoRestImpl constructor(
     private var retrofit: Retrofit
 ) : RecipeRepo {
 
