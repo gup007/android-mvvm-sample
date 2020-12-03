@@ -16,53 +16,47 @@
 package com.android.mvvm
 
 import android.view.View
-import android.widget.EditText
 import android.widget.TextView
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.SavedStateHandle
 import androidx.recyclerview.widget.RecyclerView
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
+import androidx.test.core.app.ActivityScenario
+import androidx.test.espresso.*
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.android.mvvm.home.BaseViewHolder
 import com.android.mvvm.home.HomeViewModel
 import org.hamcrest.Matcher
+import org.junit.After
 import org.junit.Assert
-import org.junit.Rule
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 class HomeActivityTest {
 
-    @get:Rule
-    val rule = ActivityScenarioRule(HomeActivity::class.java)
+//    @get:Rule
+//    val rule = ActivityScenarioRule(HomeActivity::class.java)
 
-    private fun sleep(timeInMillis: Long) {
-        try {
-            Thread.sleep(timeInMillis)
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
+    private var viewModel: HomeViewModel? = null
+
+    @Before
+    fun registerIdlingResource() {
+        val activityScenario: ActivityScenario<HomeActivity> =
+            ActivityScenario.launch(HomeActivity::class.java)
+        activityScenario.onActivity { activity ->
+            viewModel = activity.getViewModelInstance()
+            IdlingRegistry.getInstance().register(viewModel?.getIdlingResource())
         }
     }
 
     @Test
     fun scrollToItemBelowFold_checkItsText() {
-
-        val viewModel = HomeViewModel(RecipeRepoRestTestImpl(), SavedStateHandle(), null)
-        viewModel.fetchRecipeList()
-
-        sleep(2000)
-
         Espresso.onView(withId(R.id.rv_recipe_list))
             .perform(
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
@@ -73,13 +67,10 @@ class HomeActivityTest {
 
     @Test
     fun edit() {
+
         // given
         val givenIdxWillBeEdit = 1
         val givenReplaceText = "replaced!!"
-
-        val viewModel = HomeViewModel(RecipeRepoRestTestImpl(), SavedStateHandle(), null)
-        viewModel.fetchRecipeList()
-        sleep(2000)
 
         // when
         Espresso.onView(withId(R.id.rv_recipe_list))
@@ -117,6 +108,13 @@ class HomeActivityTest {
                     })
             )
 
+    }
+
+    @After
+    fun unregisterIdlingResource() {
+        if (viewModel?.getIdlingResource() != null) {
+            IdlingRegistry.getInstance().unregister(viewModel?.getIdlingResource());
+        }
     }
 
     companion object {

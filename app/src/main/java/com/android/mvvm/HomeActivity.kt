@@ -33,4 +33,8 @@ class HomeActivity : VMBaseActivity<HomeViewModel, ActivityHomeBinding>() {
         return R.layout.activity_home
     }
 
+    fun getViewModelInstance(): HomeViewModel{
+        return viewModel
+    }
+
 }

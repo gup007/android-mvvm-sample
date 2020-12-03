@@ -36,6 +36,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), RecyclerItemClickListe
 
     private fun requestData() {
         binding.progressCircular.visibility = View.VISIBLE
+        viewModel.setIdleState(false)
         viewModel.fetchRecipeList().observe(viewLifecycleOwner, Observer {
             when (it) {
                 is RecipeResponse.Success -> {
@@ -52,6 +53,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(), RecyclerItemClickListe
                     Toast.makeText(context, it.error, Toast.LENGTH_LONG).show()
                 }
             }
+            viewModel.setIdleState(true)
         })
     }
 
